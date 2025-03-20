@@ -104,19 +104,29 @@ class LocationGlobe {
                 this.conns.splice(index, 1);
             };
 
-            // Add random satellites
-            let constellation = [];
-            for(var i = 0; i< 2; i++){
-                for(var j = 0; j< 3; j++){
-                    constellation.push({
-                        lat: 50 * i - 30 + 15 * Math.random(),
-                        lon: 120 * j - 120 + 30 * i,
-                        altitude: Math.random() * (1.7 - 1.3) + 1.3
-                    });
-                }
-            }
+            const axios = require("axios");
 
-            this.globe.addConstellation(constellation);
+const API_KEY = "YOUR_API_KEY"; // Replace with your actual API key
+const SAT_ID = "25544"; // ISS Satellite ID
+
+// Use realistic coordinates (example: New York City)
+const LAT = 40.7128;
+const LON = -74.0060;
+const ALT = 0; // Altitude in km
+
+async function getSatellitePosition() {
+  try {
+    const response = await axios.get(
+      `https://api.n2yo.com/rest/v1/satellite/positions/${SAT_ID}/${LAT}/${LON}/${ALT}/1/&apiKey=${API_KEY}`
+    );
+    console.log(response.data);
+  } catch (error) {
+    console.error("Error fetching satellite data:", error.message);
+  }
+}
+
+setInterval(getSatellitePosition, 5000); // Update every 5 seconds
+
         }, 2000);
 
         // Init updaters when intro animation is done
